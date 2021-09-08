@@ -1,4 +1,4 @@
-# AlphaSeed
+# RadioSeed
 A small python script to collect random entropy from a geiger counter connected to an RPi, and make BIP39 seeds.
 
 Initially motivated by a tweet from @raw_avacado: https://twitter.com/raw_avocado/status/1433408813596545027?s=20
