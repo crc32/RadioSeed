@@ -12,3 +12,5 @@ The geiger counter pulse is supplied to Pin #12 (GPIO 18), with power from pin 1
 Once all the dependencies are loaded, the Raspberry Pi can be totally disconnected from the network.
 
 The initial code was adapted from https://apollo.open-resource.org/mission:log:2014:06:13:generating-entropy-from-radioactive-decay-with-pigi
+
+While I've checked the outputs to ensure they are compliant (both in Sparrow and on https://iancoleman.io/bip39/), use at your own risk.
