@@ -43,7 +43,7 @@ class Bip39Generator(geiger.GeigerCounter):
         geiger.GeigerCounter.__init__(self)
  
  
-    def tick (self,pin=0):
+    def old_tick (self,pin=0):
         # This works like this:
         # time:   |------------|-------------|-----------|-----------|
         # tick 0: t0
@@ -73,6 +73,42 @@ class Bip39Generator(geiger.GeigerCounter):
  
         else:
             self.t1 = datetime.datetime.now()
+ 
+   def tick (self,pin=0):
+        # New method works like this:
+        # time:   |------------|-------------|-----------|-----------|
+        # tick 0: t0
+        # tick 1: t0           t1
+        # tick 2: t0           t1            t2       
+        # tick 3: t0           t1            t2          t3
+        #               d1                         d2
+        # tick 4:                                                    t0
+        #   
+
+        self.tick_counter += 1
+
+        if (self.tick_counter % 4) == 0:
+            d0 = self.t1 - self.t0
+            d1 = self.t3 - self.t2
+ 
+            if d0 > d1:
+                self.bitstring += "1" if self.toggle else "0"
+            elif d0 < d1:
+                self.bitstring += "0" if self.toggle else "1"
+            else: #d0 = d1
+                #print("Collision")
+                1+1
+ 
+            self.toggle = not self.toggle
+
+            self.t0 = datetime.datetime.now()
+ 
+        elif (self.tick_counter % 4) == 1:
+            self.t1 = datetime.datetime.now()
+        elif (self.tick_counter % 4) == 2:
+            self.t2 = datetime.datetime.now()
+        elif (self.tick_counter % 4) == 3:
+            self.t3 = datetime.datetime.now()
  
     def generate_bip39(self,max_entropy):
         collected_entropy = 0
