@@ -21,7 +21,8 @@ class GeigerCounter():
     def __init__(self):
         self.tick_counter = 0
              
-        if geiger_simulate:
+        self.geiger_simulate = geiger_simulate
+        if self.geiger_simulate:
             self.simulator = threading.Thread(target=self.simulate_ticking)
             self.simulator.daemon = True
             self.simulator.start()
@@ -39,6 +40,12 @@ class GeigerCounter():
     def tick (self,pin=0):
         self.tick_counter += 1
         print("Ticks: %d"%self.tick_counter)
+
+    def isSimulation(self):
+        if self.geiger_simulate:
+            return "This is a SIMULATED run."
+        else:
+            return "LIVE RUN with PI Geiger Counter."
  
 if __name__ == "__main__":
     gc = GeigerCounter()

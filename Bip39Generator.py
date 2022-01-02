@@ -10,7 +10,7 @@ import textwrap
 import binascii # for conversion between Hexa and bytes
 import qrcode
 import io, os
-from bip_utils import Bip39MnemonicGenerator, Bip39SeedGenerator, Bip44Coins, Bip44, Bip84, Bip32
+from bip_utils import Bip39MnemonicGenerator, Bip39SeedGenerator, Bip44Coins, Bip44, Bip84, Bip84Coins, Bip32Secp256k1
 from rich.console import Console, Group
 from rich.table import Column, Table
 from rich.progress import Progress
@@ -74,7 +74,7 @@ class Bip39Generator(geiger.GeigerCounter):
         else:
             self.t1 = datetime.datetime.now()
  
-   def tick (self,pin=0):
+    def tick (self,pin=0):
         # New method works like this:
         # time:   |------------|-------------|-----------|-----------|
         # tick 0: t0
@@ -161,11 +161,11 @@ class Bip39Generator(geiger.GeigerCounter):
         seed_bytes = Bip39SeedGenerator(self.mnemonic).Generate()
 
         # Create bip32 and bip84 compliant base master keys
-        bip32_ctx = Bip32.FromSeed(seed_bytes)
-        bip84_mst_ctx = Bip84.FromSeed(seed_bytes, Bip44Coins.BITCOIN)
+        bip32_ctx = Bip32Secp256k1.FromSeed(seed_bytes)
+        bip84_mst_ctx = Bip84.FromSeed(seed_bytes, Bip84Coins.BITCOIN)
 
         # Store the bip32 Key Fingerprint (needed by Sparrow)
-        self.keyFingerPrint = binascii.hexlify(bip32_ctx.FingerPrint())
+        self.keyFingerPrint = bip32_ctx.FingerPrint()
 
         # select the correct bip84 branch key (m/84/0/0) for both bip84 and bip32
         bip84_acc_ctx = bip84_mst_ctx.Purpose().Coin().Account(0)
@@ -177,7 +177,8 @@ class Bip39Generator(geiger.GeigerCounter):
 
 
     def display_results(self):
-        phrase_array = self.mnemonic.split(" ")
+        print(self.mnemonic)
+        phrase_array = self.mnemonic.ToStr().split(" ")
         print("\n")
         
 
@@ -309,5 +310,6 @@ if __name__ == "__main__":
                 "[red]IF YOU ALREADY HAVE A 'Last_Seed.txt' FILE, THIS WILL BE OVERWRITTEN IF YOU ANSWER YES![white]",
                 title="Geiger Entropy Collection"))
     max_entropy = int(Prompt.ask("How much oversampling do you want (1x, 2x, &c.)")) * 256
+    print(keygen.isSimulation())
     keygen.GenerateFile(Prompt.ask("Generate file (y/N)", default="N"))
     keygen.generate_bip39(max_entropy)
