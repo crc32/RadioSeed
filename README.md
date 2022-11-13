@@ -1,7 +1,9 @@
 # RadioSeed
 A small python script to collect random entropy from a geiger counter connected to an RPi, and make BIP39 seeds.
 
-Initially motivated by a tweet from @raw_avacado: https://twitter.com/raw_avocado/status/1433408813596545027?s=20
+Initially motivated by a tweet from @raw_avacado: https://twitter.com/raw_avocado/status/1433408813596545027
+
+You can see this in operation here: https://twitter.com/Arceris_btc/status/1435692937153744898
 
 Requires a Geiger Counter that provides pulse data. I used the MightyOhm Geiger Counter Kit https://mightyohm.com/blog/products/geiger-counter/
 
